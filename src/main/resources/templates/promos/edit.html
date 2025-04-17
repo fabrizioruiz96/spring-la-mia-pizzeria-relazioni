@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/header :: head}"></div>
+    <title>Crocca - Promo</title>
+</head>
+
+<body style="background-color:#ff8800a9">
+
+    <div th:replace="~{fragments/navbar :: nav}"></div>
+
+    <main class="container d-flex justify-content-center text-center">
+
+        <div class="row">
+
+            <div class="col my-5">
+                <div th:if="${editMode}">
+                    <h1>Modifica Promo <span th:text="${promo.pizza.name}"></span></h1>
+                    <hr>
+                </div>
+                <div th:if="${!editMode}">
+                    <h1>Crea Promo <span th:text="${promo.pizza.name}"></span></h1>
+                    <hr>
+                </div>
+            </div>
+
+            <form id="promo-form" th:object="${promo}" th:action="${editMode} ? @{|/promos/edit/${promo.id}|} : @{/promos/create}" method="post">
+                <input type="hidden" th:field="*{pizza}" id="pizza">
+
+                <div class="col mb-3">
+                    <label for="inputTitle" class="form-label">Inserisci il titolo della promo</label>
+                    <input type="text" class="form-control" id="inputTitle" th:field="*{title}" th:errorClass="is-invalid">
+
+                    <div class="text-start">
+                        <ul th:if="${#fields.hasErrors('title')}">
+                            <li th:each="err : ${#fields.errors('title')}" class="text-danger" th:text="${err}"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-3">
+                    <label for="inputDateStart" class="form-label">Inserisci la data di inizio promo</label>
+                    <input type="date" class="form-control" id="inputDateStart" th:field="*{dateStart}" th:errorClass="is-invalid">
+
+                    <div class="text-start">
+                        <ul th:if="${#fields.hasErrors('dateStart')}">
+                            <li th:each="err : ${#fields.errors('dateStart')}" class="text-danger" th:text="${err}"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-3">
+                    <label for="inputDateEnd" class="form-label">Inserisci la data di fine promo</label>
+                    <input type="date" class="form-control" id="inputDateEnd" th:field="*{dateEnd}" th:errorClass="is-invalid">
+
+                    <div class="text-start">
+                        <ul th:if="${#fields.hasErrors('dateEnd')}">
+                            <li th:each="err : ${#fields.errors('dateEnd')}" class="text-danger" th:text="${err}"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col mb-3">
+                    <label for="inputDetail" class="form-label">Inserisci dettagli della promo</label>
+                    <input type="text" class="form-control" id="inputDetail" th:field="*{detail}" th:errorClass="is-invalid">
+
+                    <div class="text-start">
+                        <ul th:if="${#fields.hasErrors('detail')}">
+                            <li th:each="err : ${#fields.errors('detail')}" class="text-danger" th:text="${err}"></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col d-flex justify-content-around align-items">
+                    <div>
+                        <a th:href="@{|/pizzas/show/${promo.pizza.id}|}" class="btn btn-dark"><i class="bi bi-arrow-left"></i> Indietro</a>
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-lg border border-black">Salva</button>
+                    <div>
+                        <a th:href="@{|/pizzas/${promo.pizza.id}/promo|}" class="btn btn-dark">Cancella <i class="bi bi-trash"></i></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/header :: bootstrapScript}"></div>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/header :: head}"></div>
+    <title th:text="|Crocca - ${pizza.name}|"></title>
+</head>
+
+<body style="background-color: #ff8800a9">
+
+    <div th:replace="~{fragments/navbar :: nav}"></div>
+
+    <main class="container mt-5">
+
+        <div class="row justify-content-md-center">
+
+            <div class="col-6">
+                <h1 th:text="${pizza.name}"></h1>
+                <h4 th:text="|${pizza.price} €|"></h4>
+                <h3>Ingredienti</h3>
+                <ul>
+                    <li th:each="ingredient : ${pizza.ingredients}" th:text="${ingredient.ingredient}"></li>
+                </ul>
+            </div>
+
+            <div class="col-4">
+                <img th:src="${pizza.img}" alt="Pizza img" class="img-fluid rounded">
+            </div>
+
+        </div>
+
+        <div class="row mt-5">
+
+            <div class="col d-flex align-items-center">
+                <h3>Promo</h3>
+                <a class="btn btn-warning border border-black ms-auto" th:href="@{|/pizzas/${pizza.id}/promo|}">
+                    <i class="bi bi-plus-lg"></i> Aggiungi Promo</a>
+            </div>
+            <hr class="mt-1">
+
+            <div>
+                <table class="table table-sm table-warning" th:if="${pizza.promos.size() > 0}">
+                    <thead>
+                        <tr>
+                            <th>Nome Promo</th>
+                            <th>Data Inizio</th>
+                            <th>Data Fine</th>
+                            <th>Dettagli</th>
+                            <th><!-- Colonna per la modifica --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="promo : ${pizza.promos}">
+                            <td th:text="${promo.title}"></td>
+                            <td th:text="${promo.dateStart}"></td>
+                            <td th:text="${promo.dateEnd}"></td>
+                            <td th:text="${promo.detail}"></td>
+                            <td>
+                                <a class="btn btn-sm btn-success" th:href="@{|/promos/edit/${promo.id}|}"><i
+                                        class="bi bi-pencil"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:unless="${pizza.promos.size() > 0}" class="d-flex justify-content-center">
+                <div class="text-center align-items-center alert alert-light" role="alert">
+                    Non ci sono promo da visualizzare per questa pizza
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <div th:replace="~{fragments/header :: bootstrapScript}"></div>
+</body>

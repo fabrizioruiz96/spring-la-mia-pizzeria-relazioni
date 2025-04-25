@@ -7,18 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.exercise.spring_la_mia_pizzeria_relazioni.model.Pizza;
 import it.exercise.spring_la_mia_pizzeria_relazioni.model.Promo;
 import it.exercise.spring_la_mia_pizzeria_relazioni.repository.IngredientRepository;
 import it.exercise.spring_la_mia_pizzeria_relazioni.repository.PizzaRepository;
+import it.exercise.spring_la_mia_pizzeria_relazioni.repository.PromoRepository;
 import jakarta.validation.Valid;
 
 @Controller
@@ -30,6 +31,9 @@ public class PizzaController {
 
     @Autowired 
     private IngredientRepository ingredientRepository;
+
+    @Autowired
+    private PromoRepository promoRepository;
 
     @GetMapping
     public String index(Model model, @RequestParam(name = "keyword", required = false) String name) {
@@ -104,6 +108,13 @@ public class PizzaController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
+
+        Pizza pizza = pizzaRepository.findById(id).get();
+
+        for (Promo p : pizza.getPromos()) {
+            promoRepository.deleteById(p.getId());
+        }
+
         pizzaRepository.deleteById(id);
 
         return "redirect:/pizzas";
